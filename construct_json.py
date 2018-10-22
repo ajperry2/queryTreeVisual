@@ -1,6 +1,13 @@
+'''
+These functions are used to make a tree structure out of Nodes. These nodes
+will eventually be used to make a json object and returned
+'''
+
 import numpy
 import json
 
+
+#add a node to the tree
 def addNode(nameString,parent, layer):
     newNode=dict()
     newNode['Name'] = nameString
@@ -10,15 +17,16 @@ def addNode(nameString,parent, layer):
         if child['Name'] == nameString: return
     parent['children'].append(newNode)
 
-
+#search through a Nodes children looking for one with a particular name
 def findChild(childName,parent):
     for child in parent['children']:
         if child['Name'] == childName:
             return child
     return None
 
-
+#make the tree
 def constructJson(lists,columns:list):
+    #make the parent node
     parentNode = dict()
     parentNode['Name'] = 'Query'
     parentNode['layer'] = ''
@@ -30,7 +38,7 @@ def constructJson(lists,columns:list):
         store_set = set([x[col] for x in lists])
         unique_sizes[col] = len(store_set)
     order = numpy.argsort(unique_sizes)
-    print(order)
+    #add nodes in this order
     i = 0
     for layer in order:
         for rowNum in range(len(lists)):
@@ -38,10 +46,9 @@ def constructJson(lists,columns:list):
             parentnode = parentNode
             for iter in range(i):
                 parentnode = findChild(str(lists[rowNum][order[iter]]),parentnode)
-            #print(lists[rowNum])
-            #print(parentnode.Name+'->'+str(lists[rowNum][order[i]]))
+            #add this node to this correct parent
             addNode(str(lists[rowNum][order[i]]), parentnode, columns[layer])
         i+=1
-
+    #return tree as a json
     return(json.dumps(parentNode))
 
