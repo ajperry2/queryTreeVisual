@@ -382,15 +382,17 @@ Sijax.request('query_execute', [text]);
 //take a break (10s!)
 
 Sijax.request('query_execute', [text]);
-
+wait(1000).then(() => {
 d3.json('query?v='+versionUpdate, function(json) {
       root = json;
       root.x0 = h / 2;
       root.y0 = 0;
 
 	 root.children.forEach(collapse);
+	 update(root);
+
 });
-update(root);
+})
 
 
 

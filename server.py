@@ -149,7 +149,7 @@ def connect():
     except:
         print("I am unable to connect to the database.")
 
-        
+
 
 cursor = connect()
 app.run(host='0.0.0.0', port=5001)
